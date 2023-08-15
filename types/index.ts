@@ -12,6 +12,7 @@ export type Transaction = {
 
 export type Account = {
   id: number;
+  name: string;
   balance: number;
   categories: Category[];
   history: Transaction[];
