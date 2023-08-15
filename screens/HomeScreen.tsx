@@ -116,6 +116,7 @@ export default function HomeScreen() {
     <View>
       <StatusBar style="dark" />
       <SafeAreaView className="flex flex-col h-full pt-1">
+        {/* accounts */}
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
@@ -169,6 +170,16 @@ export default function HomeScreen() {
         {/* body */}
         <View className="mt-5 flex-grow">
           <Text className="text-center font-bold text-3xl">Name</Text>
+          <View className="flex-row px-4 justify-between py-2">
+            <Text className="font-semibold text-2xl">Balance:</Text>
+            <Text className="font-semibold text-2xl">5823856728356867235</Text>
+          </View>
+          <View className="flex-row px-4 justify-between py-2">
+            <Text className="font-semibold text-2xl">Last Update:</Text>
+            <Text className="font-semibold text-2xl">
+              {`${new Date().getDate()}-${new Date().getMonth()}-${new Date().getFullYear()}`}
+            </Text>
+          </View>
           {/* chart */}
           <View className="m-auto py-5">
             <PieChart
