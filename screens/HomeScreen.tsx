@@ -115,7 +115,7 @@ export default function HomeScreen() {
   return (
     <View>
       <StatusBar style="dark" />
-      <SafeAreaView className="flex flex-col h-full">
+      <SafeAreaView className="flex flex-col h-full pt-1">
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
