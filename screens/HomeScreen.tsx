@@ -23,6 +23,7 @@ import {
 
 import PieChart from "react-native-pie-chart";
 import { Category } from "../types/index";
+import DefaultLayout from "./DefaultLayout";
 
 const moqData = [
   { quarter: 1, earnings: 13000 },
@@ -30,80 +31,65 @@ const moqData = [
   { quarter: 3, earnings: 14250 },
   { quarter: 4, earnings: 19000 },
 ];
-// "#fbd203", "#ffb300", "#ff9100", "#ff6c00", "#ff6cff"
+
 const moqCategories: Category[] = [
   {
-    id: "1",
     color: "#fbd203",
     name: "category1",
   },
   {
-    id: "2",
     color: "#ffb300",
     name: "cat2",
   },
   {
-    id: "3",
     color: "#ff9100",
     name: "category3",
   },
   {
-    id: "4",
     color: "#ff6c00",
     name: "cat4",
   },
   {
-    id: "5",
     color: "#ff6cff",
     name: "cat5",
   },
   {
-    id: "1",
     color: "#fbd203",
     name: "category1",
   },
   {
-    id: "2",
     color: "#ffb300",
     name: "cat2",
   },
   {
-    id: "3",
     color: "#ff9100",
     name: "category3",
   },
   {
-    id: "4",
     color: "#ff6c00",
     name: "cat4",
   },
   {
-    id: "5",
     color: "#ff6cff",
     name: "cat5",
   },
   {
-    id: "1",
     color: "#fbd203",
     name: "category1",
   },
   {
-    id: "2",
     color: "#ffb300",
     name: "cat2",
   },
   {
-    id: "3",
     color: "#ff9100",
     name: "category3",
   },
   {
-    id: "4",
     color: "#ff6c00",
     name: "cat4",
   },
   {
-    id: "5",
     color: "#ff6cff",
     name: "cat5",
   },
@@ -113,8 +99,7 @@ export default function HomeScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
   return (
-    <View>
-      <StatusBar style="dark" />
+    <DefaultLayout>
       <SafeAreaView className="flex flex-col h-full pt-1">
         {/* accounts */}
         <ScrollView
@@ -200,7 +185,7 @@ export default function HomeScreen() {
             className="px-3 pb-4"
             numColumns={3}
             data={moqCategories}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(_, index) => `${index}`}
             renderItem={({ item }) => (
               <View style={{ flex: 1 / 3 }} className="flex-row py-1">
                 <BookmarkSquareIcon color={item.color} />
@@ -215,6 +200,6 @@ export default function HomeScreen() {
           <Text className="font-semibold text-base">More</Text>
         </TouchableOpacity>
       </SafeAreaView>
-    </View>
+    </DefaultLayout>
   );
 }
