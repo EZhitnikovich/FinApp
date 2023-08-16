@@ -6,11 +6,10 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../navigation/Navigation";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   BookmarkSquareIcon,
@@ -22,7 +21,7 @@ import {
 } from "react-native-heroicons/outline";
 
 import PieChart from "react-native-pie-chart";
-import { Account } from "../types/index";
+import { Account, Transaction } from "../types/index";
 import DefaultLayout from "./DefaultLayout";
 
 const moqAccounts: Account[] = [
@@ -30,22 +29,48 @@ const moqAccounts: Account[] = [
     balance: 105224,
     name: "Account name1",
     categories: [
-      { id: 0, color: "#536f96", name: "set" },
-      { id: 1, color: "#00ff00", name: "dfghdshfugisdhf" },
+      {
+        id: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
+        color: "#536f96",
+        name: "set",
+      },
+      {
+        id: "f89977c0-8334-4226-ab20-784840d42863",
+        color: "#00ff00",
+        name: "dfghdshfugisdhf",
+      },
     ],
     history: [
-      { amount: 50, date: "16-7-2023", id: 0, categoryId: -1 },
+      { amount: 50, date: "16-7-2023", id: uuidv4(), categoryId: "" },
       {
         amount: 65,
         date: "16-7-2023",
-        id: 1,
-        categoryId: 0,
+        id: uuidv4(),
+        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
       },
       {
         amount: 100,
         date: "16-7-2023",
-        id: 2,
-        categoryId: 1,
+        id: uuidv4(),
+        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
+      },
+      {
+        amount: 7,
+        date: "17-7-2023",
+        id: uuidv4(),
+        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
+      },
+      {
+        amount: 66,
+        date: "17-7-2023",
+        id: uuidv4(),
+        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
+      },
+      {
+        amount: 20,
+        date: "16-7-2023",
+        id: uuidv4(),
+        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
       },
     ],
   },
@@ -62,6 +87,27 @@ export default function HomeScreen() {
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const [accounts, setAccounts] = useState<Account[]>(moqAccounts);
   const [currentAccount, selectAccount] = useState<Account | null>(accounts[0]);
+
+  const getSumWithCategories = (history: Transaction[]) => {
+    var result: {
+      key: string;
+      value: number;
+    }[] = [];
+
+    for (let i = 0; i < history.length; i++) {
+      let val = result.find((x) => x.key === history[i].categoryId);
+      if (val) {
+        val.value += history[i].amount;
+      } else {
+        result.push({
+          key: history[i].categoryId,
+          value: history[i].amount,
+        });
+      }
+    }
+
+    return result;
+  };
 
   return (
     <DefaultLayout>
@@ -105,7 +151,7 @@ export default function HomeScreen() {
                     <View className="flex-row">
                       <Text className="text-black text-base font-semibold pr-1">
                         {account.history.find(
-                          (x) => x.id === account.history.length - 1
+                          (x) => x.id === uuidv4() // TODO: change to normal date selector
                         )?.date ?? "No data"}
                       </Text>
                       <CalendarIcon color="black" />
@@ -123,8 +169,16 @@ export default function HomeScreen() {
               ))
             : null}
           {/* add account */}
-          <View className="flex border w-60 rounded-3xl justify-center">
-            <TouchableOpacity className="justify-center m-auto border-2 rounded-full">
+          <View
+            className={
+              "flex border rounded-3xl justify-center" +
+              (accounts.length === 0 ? " h-40 relative w-96" : " w-60")
+            }
+          >
+            <TouchableOpacity
+              className="justify-center m-auto border-2 rounded-full"
+              onPress={() => navigation.navigate("AddCard")}
+            >
               <PlusIcon size={75} color="black" />
             </TouchableOpacity>
           </View>
@@ -145,7 +199,7 @@ export default function HomeScreen() {
               <Text className="font-semibold text-2xl">Last Update:</Text>
               <Text className="font-semibold text-2xl">
                 {currentAccount.history.find(
-                  (x) => x.id === currentAccount.history.length - 1
+                  (x) => x.id === uuidv4() // TODO: change to normal date selector
                 )?.date ?? "No data"}
               </Text>
             </View>
@@ -155,11 +209,15 @@ export default function HomeScreen() {
                 <View className="m-auto py-5">
                   <PieChart
                     widthAndHeight={200}
-                    series={currentAccount.history.map((item) => item.amount)}
-                    sliceColor={currentAccount.history.map((item) =>
-                      item.categoryId !== -1
-                        ? currentAccount.categories[item.categoryId].color
-                        : "#000000"
+                    series={getSumWithCategories(currentAccount.history).map(
+                      (x) => x.value
+                    )} // TODO: ref mb
+                    sliceColor={getSumWithCategories(
+                      currentAccount.history
+                    ).map(
+                      (x) =>
+                        currentAccount.categories.find((c) => c.id == x.key)
+                          ?.color ?? "#000000"
                     )}
                     coverRadius={0.6}
                   />
@@ -185,13 +243,15 @@ export default function HomeScreen() {
         ) : null}
         {/* footer */}
         {currentAccount ? (
-          <TouchableOpacity
-            className="flex-row rounded-full border p-2 justify-center mx-20 my-5 flex-grow-0"
-            onPress={() => navigation.navigate("MoreInfo")}
-          >
-            <MagnifyingGlassPlusIcon size={25} color="black" />
-            <Text className="font-semibold text-base">More</Text>
-          </TouchableOpacity>
+          <View className="flex-grow-0 py-3">
+            <TouchableOpacity
+              className="flex-row border rounded-2xl w-1/2 justify-center p-3 m-auto"
+              onPress={() => navigation.navigate("MoreInfo")}
+            >
+              <MagnifyingGlassPlusIcon size={28} color="black" />
+              <Text className="font-semibold text-xl pl-2">More</Text>
+            </TouchableOpacity>
+          </View>
         ) : null}
       </View>
     </DefaultLayout>
