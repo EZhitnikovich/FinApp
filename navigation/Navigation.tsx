@@ -21,6 +21,7 @@ export default function Navigation() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          animation: "none",
         }}
       >
         <Stack.Screen name="Home" component={HomeScreen} />
