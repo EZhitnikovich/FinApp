@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import DefaultLayout from "./DefaultLayout";
@@ -79,21 +80,24 @@ export default function AddCardScreen() {
             <TouchableOpacity className="border rounded-full w-10 h-10 ml-auto" />
           </View>
           {/* category list */}
-          <ScrollView className="h-1/6">
-            {categories.map((category, index) => (
-              <View key={index} className="flex-row mb-3 items-center">
+          <FlatList
+            className="h-1/6"
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+            data={categories}
+            renderItem={({ item }) => (
+              <View className="flex-row mb-3 items-center">
                 <TextInput
-                  defaultValue={category.name}
+                  defaultValue={item.name}
                   className="border rounded-2xl p-3"
                   style={{ width: "85%" }}
                 />
                 <TouchableOpacity
                   className="border rounded-full w-10 h-10 ml-auto"
-                  style={{ backgroundColor: category.color }}
+                  style={{ backgroundColor: item.color }}
                 />
               </View>
-            ))}
-          </ScrollView>
+            )}
+          />
         </View>
         {/* control */}
         <View className="flex-row flex-grow-0 justify-evenly py-3 mx-3 border-t">
