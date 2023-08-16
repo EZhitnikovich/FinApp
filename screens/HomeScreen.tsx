@@ -4,8 +4,9 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  DeviceEventEmitter,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../navigation/Navigation";
@@ -23,6 +24,9 @@ import {
 import PieChart from "react-native-pie-chart";
 import { Account, Transaction } from "../types/index";
 import DefaultLayout from "./DefaultLayout";
+import { getData, storeData } from "../utils/asyncStorage";
+import { storageKey } from "../utils/constants";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const moqAccounts: Account[] = [
   {
@@ -85,8 +89,27 @@ const moqAccounts: Account[] = [
 export default function HomeScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  const [accounts, setAccounts] = useState<Account[]>(moqAccounts);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+
   const [currentAccount, selectAccount] = useState<Account | null>(accounts[0]);
+
+  useEffect(() => {
+    getData(storageKey).then((x) => {
+      if (x) {
+        console.log("1 ", x);
+        setAccounts(x);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener("testEvent", (eventData: Account[]) => {
+      console.log("3 ", eventData);
+      setAccounts(eventData);
+      console.log("2 ", accounts);
+      storeData(storageKey, accounts);
+    });
+  }, []);
 
   const getSumWithCategories = (history: Transaction[]) => {
     var result: {
@@ -109,6 +132,8 @@ export default function HomeScreen() {
     return result;
   };
 
+  //return <SafeAreaView></SafeAreaView>;
+
   return (
     <DefaultLayout>
       <View className="flex flex-col h-full pt-1">
@@ -127,7 +152,9 @@ export default function HomeScreen() {
                   className="w-60 rounded-3xl p-3 space-y-1 border mr-5"
                 >
                   <Text className="text-black text-2xl border-b-2 font-semibold">
-                    {account.name}
+                    {account.name.length > 15
+                      ? account.name.slice(0, 16) + "..."
+                      : account.name}
                   </Text>
                   {/* balance */}
                   <View className="flex-row justify-between">
@@ -172,12 +199,12 @@ export default function HomeScreen() {
           <View
             className={
               "flex border rounded-3xl justify-center" +
-              (accounts.length === 0 ? " h-40 relative w-96" : " w-60")
+              (accounts.length === 0 ? " h-full w-96" : " w-60")
             }
           >
             <TouchableOpacity
               className="justify-center m-auto border-2 rounded-full"
-              onPress={() => navigation.navigate("AddCard")}
+              onPress={() => navigation.navigate("AddCard", { accounts })}
             >
               <PlusIcon size={75} color="black" />
             </TouchableOpacity>

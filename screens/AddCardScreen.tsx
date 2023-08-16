@@ -5,31 +5,50 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  DeviceEventEmitter,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "./DefaultLayout";
 import {
   ArrowUpCircleIcon,
   ArrowUturnLeftIcon,
   SquaresPlusIcon,
 } from "react-native-heroicons/outline";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../navigation/Navigation";
-import { Category } from "../types";
+import { Account, Category } from "../types";
 
 import { v4 as uuidv4 } from "uuid";
 
 export default function AddCardScreen() {
+  const route = useRoute<RouteProp<RootStackParams>>();
+
+  const accounts = route.params?.accounts ?? [];
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const [categories, updateCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [accountBalance, setAccountBalance] = useState(0);
 
   const addCategory = (name: string, color: string) => {
     let category: Category = { id: uuidv4(), color, name };
     categories.push(category);
     setNewCategoryName("");
+  };
+
+  const addAccount = () => {
+    let newAccount: Account = {
+      balance: accountBalance,
+      categories: categories,
+      history: [],
+      name: accountName,
+    };
+    accounts.push(newAccount);
+    DeviceEventEmitter.emit("testEvent", [...accounts]);
+    navigation.navigate("Home");
   };
 
   return (
@@ -46,6 +65,8 @@ export default function AddCardScreen() {
           <TextInput
             className="rounded-2xl border p-3 mx-2 mb-3"
             placeholder="Account name"
+            defaultValue={accountName}
+            onChangeText={(item) => setAccountName(item)}
           />
           <Text className="font-semibold text-xl mx-5 mb-1">
             Enter initial balance
@@ -54,6 +75,9 @@ export default function AddCardScreen() {
             keyboardType="numeric"
             className="rounded-2xl border p-3 mx-2 mb-3"
             placeholder="Initial balance"
+            maxLength={15}
+            defaultValue={String(accountBalance)}
+            onChangeText={(item) => setAccountBalance(Number(item))}
           />
         </View>
         {/* categories */}
@@ -82,7 +106,6 @@ export default function AddCardScreen() {
           {/* category list */}
           <FlatList
             className="h-1/6"
-            contentContainerStyle={{ paddingHorizontal: 10 }}
             data={categories}
             renderItem={({ item }) => (
               <View className="flex-row mb-3 items-center">
@@ -108,7 +131,10 @@ export default function AddCardScreen() {
             <ArrowUturnLeftIcon size={28} color="black" />
             <Text className="font-semibold text-xl pl-2">Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-row border rounded-2xl w-2/5 justify-center p-3">
+          <TouchableOpacity
+            className="flex-row border rounded-2xl w-2/5 justify-center p-3"
+            onPress={() => addAccount()}
+          >
             <SquaresPlusIcon size={28} color="black" />
             <Text className="font-semibold text-xl pl-2">Add</Text>
           </TouchableOpacity>

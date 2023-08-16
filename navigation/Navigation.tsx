@@ -5,11 +5,14 @@ import HomeScreen from "../screens/HomeScreen";
 import TestScreen from "../screens/TestScreen";
 import AddCardScreen from "../screens/AddCardScreen";
 import MoreInfoScreen from "../screens/MoreInfoScreen";
+import { Account } from "../types/index";
 
 export type RootStackParams = {
   Home: undefined;
   MoreInfo: undefined;
-  AddCard: undefined;
+  AddCard: {
+    accounts: Account[];
+  };
   Test: undefined;
 };
 
