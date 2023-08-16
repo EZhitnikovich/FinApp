@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   DeviceEventEmitter,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import DefaultLayout from "./DefaultLayout";
@@ -20,20 +21,24 @@ import { Account, Category } from "../types";
 
 import { v4 as uuidv4 } from "uuid";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TriangleColorPicker } from "react-native-color-picker";
+import { ModalColorPicker } from "../components/modalColorPicker";
 
 export default function AddCardScreen() {
   const route = useRoute<RouteProp<RootStackParams>>();
-
   const accounts = route.params?.accounts ?? [];
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  const [color, setColor] = useState("#00ff77");
   const [categories, updateCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [accountName, setAccountName] = useState("");
   const [accountBalance, setAccountBalance] = useState(0);
+  const [showPicker, togglePicker] = useState(false);
 
   const addCategory = (name: string, color: string) => {
+    if (name.length === 0) return;
     let category: Category = { id: uuidv4(), color, name };
     categories.push(category);
     setNewCategoryName("");
@@ -92,7 +97,7 @@ export default function AddCardScreen() {
           {/* add new category */}
           <TouchableOpacity
             className="flex-row border rounded-2xl justify-center p-3"
-            onPress={() => addCategory(newCategoryName, "#00ff11")}
+            onPress={() => addCategory(newCategoryName, color)}
           >
             <ArrowUpCircleIcon size={28} color="black" />
             <Text className="font-semibold text-xl pl-2">Add category</Text>
@@ -105,8 +110,20 @@ export default function AddCardScreen() {
               defaultValue={newCategoryName}
               onChangeText={(newText) => setNewCategoryName(newText)}
             />
-            <TouchableOpacity className="border rounded-full w-10 h-10 ml-auto" />
+            <TouchableOpacity
+              style={{ backgroundColor: color }}
+              className="border rounded-full w-10 h-10 ml-auto"
+              onPress={() => togglePicker(!showPicker)}
+            />
           </View>
+          <ModalColorPicker
+            onColorSelected={(color) => {
+              setColor(color);
+              togglePicker(false);
+            }}
+            isVisible={showPicker}
+            defaultColor={color}
+          />
           {/* category list */}
           <FlatList
             className="h-1/6"

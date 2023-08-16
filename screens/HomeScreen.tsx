@@ -134,6 +134,7 @@ export default function HomeScreen() {
                   />
                 ))
               : null}
+            {/* TODO: full screen if length 0 */}
             {/* add account */}
             <View
               className={
