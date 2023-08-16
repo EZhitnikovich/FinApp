@@ -1,14 +1,14 @@
 export type Category = {
-  id: number;
+  id: string;
   name: string;
   color: string;
 };
 
 export type Transaction = {
-  id: number;
+  id: string;
   date: string;
   amount: number;
-  categoryId: number;
+  categoryId: string;
 };
 
 export type Account = {
