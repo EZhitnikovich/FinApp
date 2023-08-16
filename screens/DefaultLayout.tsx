@@ -8,7 +8,7 @@ type DefaultLayoutProps = {
 
 export default function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
-    <View>
+    <View className="h-full">
       <StatusBar style="dark" />
       {children}
     </View>

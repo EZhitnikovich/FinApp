@@ -3,11 +3,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
   FlatList,
   DeviceEventEmitter,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DefaultLayout from "./DefaultLayout";
 import {
   ArrowUpCircleIcon,
@@ -20,6 +19,7 @@ import { RootStackParams } from "../navigation/Navigation";
 import { Account, Category } from "../types";
 
 import { v4 as uuidv4 } from "uuid";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddCardScreen() {
   const route = useRoute<RouteProp<RootStackParams>>();
@@ -40,20 +40,23 @@ export default function AddCardScreen() {
   };
 
   const addAccount = () => {
-    let newAccount: Account = {
-      balance: accountBalance,
-      categories: categories,
-      history: [],
-      name: accountName,
-    };
-    accounts.push(newAccount);
-    DeviceEventEmitter.emit("testEvent", [...accounts]);
-    navigation.navigate("Home");
+    if (accountName.length > 0) {
+      let newAccount: Account = {
+        balance: accountBalance,
+        categories: categories,
+        history: [],
+        name: accountName,
+      };
+      accounts.push(newAccount);
+
+      DeviceEventEmitter.emit("testEvent", [...accounts]);
+      navigation.navigate("Home");
+    }
   };
 
   return (
     <DefaultLayout>
-      <View className="flex flex-col h-full">
+      <SafeAreaView className="flex flex-col h-full">
         {/* main */}
         <View className="border-b mx-3 flex-grow-0">
           <Text className="font-semibold text-3xl m-auto px-3 border-b my-3">
@@ -65,6 +68,7 @@ export default function AddCardScreen() {
           <TextInput
             className="rounded-2xl border p-3 mx-2 mb-3"
             placeholder="Account name"
+            maxLength={25}
             defaultValue={accountName}
             onChangeText={(item) => setAccountName(item)}
           />
@@ -139,7 +143,7 @@ export default function AddCardScreen() {
             <Text className="font-semibold text-xl pl-2">Add</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     </DefaultLayout>
   );
 }
