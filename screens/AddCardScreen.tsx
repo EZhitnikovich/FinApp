@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   FlatList,
   DeviceEventEmitter,
-  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import DefaultLayout from "./DefaultLayout";
@@ -21,7 +20,6 @@ import { Account, Category } from "../types";
 
 import { v4 as uuidv4 } from "uuid";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TriangleColorPicker } from "react-native-color-picker";
 import { ModalColorPicker } from "../components/modalColorPicker";
 
 export default function AddCardScreen() {
@@ -128,6 +126,7 @@ export default function AddCardScreen() {
           <FlatList
             className="h-1/6"
             data={categories}
+            keyExtractor={(_, index) => `${index}`}
             renderItem={({ item }) => (
               <View className="flex-row mb-3 items-center">
                 <TextInput

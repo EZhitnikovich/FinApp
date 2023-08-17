@@ -25,70 +25,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { storageKey } from "../utils/constants";
 import { getData, storeData } from "../utils/asyncStorage";
 
-const moqAccounts: Account[] = [
-  {
-    balance: 105224,
-    name: "Account name1",
-    categories: [
-      {
-        id: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-        color: "#536f96",
-        name: "set",
-      },
-      {
-        id: "f89977c0-8334-4226-ab20-784840d42863",
-        color: "#00ff00",
-        name: "dfghdshfugisdhf",
-      },
-    ],
-    history: [
-      { amount: 50, date: "16-7-2023", id: uuidv4(), categoryId: "" },
-      {
-        amount: 65,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 100,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
-      },
-      {
-        amount: 7,
-        date: "17-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 66,
-        date: "17-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 20,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
-      },
-    ],
-  },
-  {
-    balance: 999999,
-    name: "Account name2",
-    history: [],
-    categories: [],
-  },
-];
-
 export default function HomeScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
   const [accounts, setAccounts] = useState<Account[]>();
   const [currentAccount, selectAccount] = useState<Account | null>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
@@ -98,8 +40,9 @@ export default function HomeScreen() {
         setAccounts(JSON.parse(data) as Account[]);
       }
     };
-    readData();
-    setLoading(false);
+    readData().then(() => {
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
