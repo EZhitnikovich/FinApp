@@ -13,7 +13,7 @@ export type Transaction = {
 
 export type Account = {
   name: string;
-  balance: number;
+  balance: BigInt;
   categories: Category[];
   history: Transaction[];
 };

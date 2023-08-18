@@ -32,7 +32,7 @@ export default function AddCardScreen() {
   const [categories, updateCategories] = useState<Category[]>([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [accountName, setAccountName] = useState("");
-  const [accountBalance, setAccountBalance] = useState(0);
+  const [accountBalance, setAccountBalance] = useState<BigInt>(0n);
   const [showPicker, togglePicker] = useState(false);
 
   const addCategory = (name: string, color: string) => {
@@ -45,7 +45,7 @@ export default function AddCardScreen() {
   const addAccount = () => {
     if (accountName.length > 0) {
       let newAccount: Account = {
-        balance: Number.isNaN(accountBalance) ? 0 : accountBalance,
+        balance: accountBalance,
         categories: categories,
         history: [],
         name: accountName,
@@ -62,9 +62,9 @@ export default function AddCardScreen() {
     updateCategories(arr);
   };
 
-  function setFloat(v: string, fun: (s: number) => void): void {
+  function setFloat(v: string, fun: (s: BigInt) => void): void {
     if (/^[+-]?([0-9]*[.])?[0-9]+$/.test(v)) {
-      fun(Number(v));
+      fun(BigInt(v));
     }
   }
 
@@ -92,7 +92,7 @@ export default function AddCardScreen() {
           keyboardType="numeric"
           className="rounded-2xl border p-3 mx-2 mb-3"
           placeholder="Initial balance"
-          maxLength={10}
+          maxLength={50}
           defaultValue={String(accountBalance)}
           onChangeText={(item) => setFloat(item, setAccountBalance)}
         />

@@ -24,7 +24,7 @@ export const Card = ({ account, onAccountSelected }: CardProps) => {
             <Text className="text-xl font-semibold pr-2">
               {`${account.balance}`.length > 13
                 ? `${account.balance}`.slice(0, 12) + "..."
-                : account.balance}
+                : account.balance.toString()}
             </Text>
             <CreditCardIcon size={28} color="black" />
           </View>

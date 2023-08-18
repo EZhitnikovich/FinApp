@@ -47,6 +47,7 @@ export default function HomeScreen() {
     DeviceEventEmitter.addListener("testEvent", (eventData: Account[]) => {
       setAccounts(eventData);
       storeData(storageKey, JSON.stringify(eventData));
+      console.log(eventData);
     });
   }, []);
 
@@ -87,7 +88,11 @@ export default function HomeScreen() {
             <View className="flex-row mt-5 justify-between">
               <Text className="text-2xl">Balance:</Text>
               <View className="flex-row justify-end">
-                <Text className="text-2xl pr-2">{currentAccount.balance}</Text>
+                <Text className="text-2xl pr-2">
+                  {currentAccount.balance.toString().length > 15
+                    ? currentAccount.balance.toString().slice(0, 14) + "..."
+                    : currentAccount.balance.toString()}
+                </Text>
                 <CreditCardIcon size={32} color={"black"} />
               </View>
             </View>
