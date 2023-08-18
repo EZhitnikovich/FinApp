@@ -11,6 +11,7 @@ import {
   ArrowUpCircleIcon,
   ArrowUturnLeftIcon,
   SquaresPlusIcon,
+  XMarkIcon,
 } from "react-native-heroicons/outline";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -44,7 +45,7 @@ export default function AddCardScreen() {
   const addAccount = () => {
     if (accountName.length > 0) {
       let newAccount: Account = {
-        balance: accountBalance,
+        balance: Number.isNaN(accountBalance) ? 0 : accountBalance,
         categories: categories,
         history: [],
         name: accountName,
@@ -55,6 +56,17 @@ export default function AddCardScreen() {
       navigation.navigate("Home");
     }
   };
+
+  const removeById = (id: string) => {
+    let arr = categories.filter((x) => x.id !== id);
+    updateCategories(arr);
+  };
+
+  function setFloat(v: string, fun: (s: number) => void): void {
+    if (/^[+-]?([0-9]*[.])?[0-9]+$/.test(v)) {
+      fun(Number(v));
+    }
+  }
 
   return (
     <SafeAreaView className="flex flex-col h-full">
@@ -82,7 +94,7 @@ export default function AddCardScreen() {
           placeholder="Initial balance"
           maxLength={10}
           defaultValue={String(accountBalance)}
-          onChangeText={(item) => setAccountBalance(Number(item))}
+          onChangeText={(item) => setFloat(item, setAccountBalance)}
         />
       </View>
       {/* categories */}
@@ -100,8 +112,7 @@ export default function AddCardScreen() {
         </TouchableOpacity>
         <View className="flex flex-row my-3 items-center">
           <TextInput
-            className="border rounded-2xl p-3"
-            style={{ width: "85%" }}
+            className="border rounded-2xl p-3 flex-1 mr-2"
             placeholder="Category name"
             defaultValue={newCategoryName}
             onChangeText={(newText) => setNewCategoryName(newText)}
@@ -127,12 +138,18 @@ export default function AddCardScreen() {
           keyExtractor={(_, index) => `${index}`}
           renderItem={({ item }) => (
             <View className="flex-row mb-3 items-center">
-              <TextInput
-                defaultValue={item.name}
-                className="border rounded-2xl p-3"
-                style={{ width: "85%" }}
-              />
               <TouchableOpacity
+                className="border rounded-full w-10 h-10 mr-auto"
+                onPress={() => removeById(item.id)}
+              >
+                <XMarkIcon color={"black"} size={38} />
+              </TouchableOpacity>
+              <Text className="border rounded-2xl px-3 py-4 flex-1 mx-2">
+                {item.name.length > 38
+                  ? item.name.slice(0, 37) + "..."
+                  : item.name}
+              </Text>
+              <View
                 className="border rounded-full w-10 h-10 ml-auto"
                 style={{ backgroundColor: item.color }}
               />
