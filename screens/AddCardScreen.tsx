@@ -80,7 +80,7 @@ export default function AddCardScreen() {
           keyboardType="numeric"
           className="rounded-2xl border p-3 mx-2 mb-3"
           placeholder="Initial balance"
-          maxLength={15}
+          maxLength={10}
           defaultValue={String(accountBalance)}
           onChangeText={(item) => setAccountBalance(Number(item))}
         />

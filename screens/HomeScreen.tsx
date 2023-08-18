@@ -14,7 +14,10 @@ import { Account } from "../types/index";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { storageKey } from "../utils/constants";
 import { getData, storeData } from "../utils/asyncStorage";
-import { MagnifyingGlassPlusIcon } from "react-native-heroicons/outline";
+import {
+  CreditCardIcon,
+  MagnifyingGlassPlusIcon,
+} from "react-native-heroicons/outline";
 import { Card } from "../components/card";
 import { AddCardButton } from "../components/AddCardButton";
 import { Chart } from "../components/chart";
@@ -81,18 +84,27 @@ export default function HomeScreen() {
             <Text className="text-center text-3xl font-semibold border-b">
               {currentAccount?.name}
             </Text>
+            <View className="flex-row mt-5 justify-between">
+              <Text className="text-2xl">Balance:</Text>
+              <View className="flex-row justify-end">
+                <Text className="text-2xl pr-2">{currentAccount.balance}</Text>
+                <CreditCardIcon size={32} color={"black"} />
+              </View>
+            </View>
             {/* chart */}
             <Chart
               categories={currentAccount.categories}
               history={currentAccount.history}
             />
-            <View className="px-3 flex-grow-0 h-[20%] mb-5">
-              <Legend categories={currentAccount.categories} />
-            </View>
+            {currentAccount.categories.length > 0 ? (
+              <View className="flex-grow-0 h-[30%] mb-2 border rounded-2xl p-3">
+                <Legend categories={currentAccount.categories} />
+              </View>
+            ) : null}
             {/* control */}
             <TouchableOpacity className="flex-row border rounded-2xl justify-center p-2 mt-2">
               <MagnifyingGlassPlusIcon size={28} color="black" />
-              <Text className="text-xl font-semibold">More</Text>
+              <Text className="text-xl">More</Text>
             </TouchableOpacity>
           </View>
         ) : (

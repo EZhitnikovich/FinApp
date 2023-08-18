@@ -44,7 +44,7 @@ export const Card = ({ account, onAccountSelected }: CardProps) => {
           className="flex-row rounded-full border p-2 justify-center mt-2"
         >
           <MagnifyingGlassIcon size={28} color="black" />
-          <Text className="font-semibold text-xl">View</Text>
+          <Text className="text-xl">View</Text>
         </TouchableOpacity>
       </View>
     </View>

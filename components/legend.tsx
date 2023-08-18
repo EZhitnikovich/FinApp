@@ -9,6 +9,8 @@ type LegendProps = {
 export const Legend = ({ categories }: LegendProps) => {
   return (
     <FlatList
+      persistentScrollbar={true}
+      showsVerticalScrollIndicator={true}
       numColumns={3}
       data={categories}
       keyExtractor={(_, index) => `${index}`}
