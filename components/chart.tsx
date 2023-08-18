@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import PieChart from "react-native-pie-chart";
 import { Category, Transaction } from "../../types";
 
@@ -31,7 +31,7 @@ export const Chart = ({ history, categories }: ChartProps) => {
 
   let sumWithCategories = getSumWithCategories(history);
 
-  return (
+  return history.length > 0 ? (
     <View className="m-auto py-5">
       <PieChart
         widthAndHeight={200}
@@ -41,6 +41,10 @@ export const Chart = ({ history, categories }: ChartProps) => {
         )}
         coverRadius={0.6}
       />
+    </View>
+  ) : (
+    <View className="flex flex-1 items-center justify-center">
+      <Text className="font-semibold text-4xl">No data</Text>
     </View>
   );
 };
