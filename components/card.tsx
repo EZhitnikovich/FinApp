@@ -23,7 +23,7 @@ export const Card = ({ account, onAccountSelected }: CardProps) => {
           <View className="flex-row">
             <Text className="text-xl font-semibold pr-2">
               {`${account.balance}`.length > 13
-                ? `${account.balance}`.slice(0, 11) + "..."
+                ? `${account.balance}`.slice(0, 12) + "..."
                 : account.balance}
             </Text>
             <CreditCardIcon size={28} color="black" />

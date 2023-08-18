@@ -17,7 +17,9 @@ export const Legend = ({ categories }: LegendProps) => {
       renderItem={({ item }) => (
         <View style={{ flex: 1 / 3 }} className=" flex-row py-1">
           <BookmarkSquareIcon color={item.color} />
-          <Text>{item.name}</Text>
+          <Text>
+            {item.name.length > 10 ? item.name.slice(0, 9) + "..." : item.name}
+          </Text>
         </View>
       )}
     />
