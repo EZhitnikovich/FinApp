@@ -82,14 +82,20 @@ export default function HomeScreen() {
           style={{ backgroundColor: theme.bgWhite(0.9) }}
         >
           {/* balance */}
-          <View className="h-[15%] w-[80%] bg-purple-200 m-auto rounded-xl items-center my-3">
-            <Text className="text-green-700 m-auto text-lg">
-              +9999999999999999
+          <View className="h-[15%] w-[80%] bg-purple-200 m-auto rounded-xl items-center my-3 px-3 pb-1">
+            <Text className="text-3xl m-auto border-b w-full text-center">
+              9999999999999999
             </Text>
-            <Text className="text-3xl m-auto">9999999999999999</Text>
-            <Text className="text-red-700 m-auto text-lg">
-              -9999999999999999
-            </Text>
+            <View className="flex-row justify-between w-full">
+              <Text className="text-green-700 text-base">Income:</Text>
+              <Text className="text-green-700 text-base">
+                +9999999999999999
+              </Text>
+            </View>
+            <View className="flex-row justify-between w-full">
+              <Text className="text-red-700 text-base">Expenses:</Text>
+              <Text className="text-red-700 text-base">-9999999999999999</Text>
+            </View>
           </View>
           {/* chart */}
           {/* TODO: remove temp items */}
