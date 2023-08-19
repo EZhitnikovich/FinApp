@@ -2,6 +2,7 @@ export type Category = {
   id: string;
   name: string;
   color: string;
+  categoryType: CategoryTypes;
 };
 
 export type Transaction = {
@@ -20,3 +21,8 @@ export type Account = {
   balance: number;
   history: Transaction[];
 };
+
+enum CategoryTypes {
+  income = "income",
+  expense = "expense",
+}
