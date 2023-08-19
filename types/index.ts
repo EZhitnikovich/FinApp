@@ -6,14 +6,17 @@ export type Category = {
 
 export type Transaction = {
   id: string;
-  date: string;
+  date: {
+    day: number;
+    month: number;
+    year: number;
+  };
   amount: number;
   categoryId: string;
 };
 
 export type Account = {
   name: string;
-  balance: BigInt;
-  categories: Category[];
+  balance: number;
   history: Transaction[];
 };
