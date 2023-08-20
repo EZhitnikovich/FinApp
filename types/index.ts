@@ -7,6 +7,7 @@ export type Category = {
 
 export type Transaction = {
   id: string;
+  note: string;
   date: {
     day: number;
     month: number;
@@ -18,11 +19,10 @@ export type Transaction = {
 
 export type Account = {
   name: string;
-  balance: number;
   history: Transaction[];
 };
 
-enum CategoryTypes {
+export enum CategoryTypes {
   income = "income",
   expense = "expense",
 }
