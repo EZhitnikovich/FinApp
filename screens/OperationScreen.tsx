@@ -53,6 +53,11 @@ export default function OperationScreen() {
   const addTransaction = () => {
     if (amount === "0") {
       Alert.alert("Amount error", "Enter amount");
+      return;
+    }
+    if (!currentCategory) {
+      Alert.alert("Category error", "Select category");
+      return;
     }
     let numAmount = Number(amount);
     if (!Number.isNaN(numAmount)) {
@@ -71,6 +76,7 @@ export default function OperationScreen() {
       };
       account.history.push(transaction);
     }
+    navigation.navigate("Home");
   };
 
   return (
@@ -95,8 +101,7 @@ export default function OperationScreen() {
             className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700"
             onPress={() => {
               addTransaction();
-              navigation.navigate("Home");
-            }} //TODO: set function
+            }}
           >
             <CheckCircleIcon className="m-auto" size={53} color={"white"} />
           </TouchableOpacity>

@@ -128,10 +128,13 @@ export default function HomeScreen() {
       <SafeAreaView className="flex flex-1">
         <View className="h-[10%] flex-row justify-between items-end pb-3 px-4">
           <TouchableOpacity className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700">
-            <CalendarIcon className="m-auto" size={53} color={"white"} />
+            <ClipboardDocumentListIcon
+              className="m-auto"
+              size={53}
+              color={"white"}
+            />
           </TouchableOpacity>
           <View className="items-center">
-            <Text className="text-purple-300">August 18, 2023</Text>
             <Text className="text-purple-100">{currentAccount?.name}</Text>
           </View>
           <TouchableOpacity className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700">
@@ -146,6 +149,7 @@ export default function HomeScreen() {
           className="flex-1"
           style={{ backgroundColor: theme.bgWhite(0.9) }}
         >
+          <Text className="text-purple-700 mx-auto mt-3">August 18, 2023</Text>
           {/* balance */}
           <View className="h-[15%] w-[80%] bg-purple-200 m-auto rounded-xl items-center my-3 px-3 pb-1">
             <Text className="text-3xl m-auto border-b w-full text-center">
@@ -252,13 +256,6 @@ export default function HomeScreen() {
               style={{ backgroundColor: theme.bgWhite(0.5) }}
             >
               <MinusIcon size={60} color={"red"} />
-            </TouchableOpacity>
-            {/* history */}
-            <TouchableOpacity
-              className="w-24 h-24 border-4 rounded-2xl items-center justify-center"
-              style={{ backgroundColor: theme.bgWhite(0.5) }}
-            >
-              <ClipboardDocumentListIcon size={60} color={"black"} />
             </TouchableOpacity>
             {/* income */}
             <TouchableOpacity
