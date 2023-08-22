@@ -118,7 +118,15 @@ export default function HomeScreen() {
       />
       <SafeAreaView className="flex flex-1">
         <View className="h-[10%] flex-row justify-between items-end pb-3 px-4">
-          <TouchableOpacity className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700">
+          <TouchableOpacity
+            className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700"
+            onPress={() =>
+              navigation.navigate("History", {
+                history: currentAccount.history,
+                categories: categories,
+              })
+            }
+          >
             <ClipboardDocumentListIcon
               className="m-auto"
               size={53}
@@ -126,7 +134,9 @@ export default function HomeScreen() {
             />
           </TouchableOpacity>
           <View className="items-center">
-            <Text className="text-purple-100">{currentAccount?.name}</Text>
+            <Text className="text-purple-100  text-xl">
+              {currentAccount?.name}
+            </Text>
           </View>
           <TouchableOpacity className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700">
             <AdjustmentsVerticalIcon
@@ -178,7 +188,7 @@ export default function HomeScreen() {
             style={{ backgroundColor: theme.bgWhite(0.2) }}
             onPress={() =>
               currentAccount
-                ? navigation.navigate("Income", {
+                ? navigation.navigate("Operation", {
                     account: currentAccount,
                     categories: categories,
                   })

@@ -31,7 +31,7 @@ export default function OperationScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const route = useRoute<RouteProp<RootStackParams>>();
+  const route = useRoute<RouteProp<RootStackParams, "Operation">>();
   const account = route.params!.account;
   const categories = route.params!.categories;
 
