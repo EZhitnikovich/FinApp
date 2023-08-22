@@ -1,13 +1,17 @@
 import { View, Text } from "react-native";
 import PieChart from "react-native-pie-chart";
-import { Category, Transaction } from "../../types";
+import { Category, CategoryTypes, Transaction } from "../types";
 
 type ChartProps = {
   history: Transaction[];
   categories: Category[];
+  type: CategoryTypes;
 };
 
-export const Chart = ({ history, categories }: ChartProps) => {
+export const Chart = ({ history, categories, type }: ChartProps) => {
+  var hist = history.filter(
+    (x) => categories.find((c) => c.id === x.categoryId)?.categoryType === type
+  );
   const getSumWithCategories = (history: Transaction[]) => {
     var result: {
       key: string;
@@ -29,22 +33,24 @@ export const Chart = ({ history, categories }: ChartProps) => {
     return result;
   };
 
-  let sumWithCategories = getSumWithCategories(history);
+  let sumWithCategories = getSumWithCategories(hist);
 
-  return history.length > 0 ? (
+  return sumWithCategories.length > 0 ? (
     <View className="m-auto py-5">
-      <PieChart
-        widthAndHeight={200}
-        series={sumWithCategories.map((x) => x.value)}
-        sliceColor={sumWithCategories.map(
-          (x) => categories.find((c) => c.id == x.key)?.color ?? "#000000"
-        )}
-        coverRadius={0.6}
-      />
+      <View>
+        <PieChart
+          widthAndHeight={200}
+          series={sumWithCategories.map((x) => Math.abs(x.value))}
+          sliceColor={sumWithCategories.map(
+            (x) => categories.find((c) => c.id == x.key)?.color ?? "#000000"
+          )}
+          coverRadius={0.6}
+        />
+      </View>
     </View>
   ) : (
-    <View className="flex flex-1 items-center justify-center">
-      <Text className="font-semibold text-4xl">No data</Text>
+    <View className="rounded-full w-[200] h-[200] bg-purple-400 m-auto">
+      <View className="rounded-full w-[120] h-[120] bg-white m-auto"></View>
     </View>
   );
 };

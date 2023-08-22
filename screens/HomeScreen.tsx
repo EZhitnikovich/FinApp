@@ -1,30 +1,21 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  DeviceEventEmitter,
-  Image,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../navigation/Navigation";
 
 import { Account, Category, CategoryTypes } from "../types/index";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { storageKey } from "../utils/constants";
-import { getData, storeData } from "../utils/asyncStorage";
 import {
   AdjustmentsVerticalIcon,
-  BookmarkIcon,
-  CalendarIcon,
   ClipboardDocumentListIcon,
-  MinusIcon,
   PlusIcon,
 } from "react-native-heroicons/outline";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "../theme";
 import { v4 as uuidv4 } from "uuid";
+import { Chart } from "../components/chart";
+import { Legend } from "../components/legend";
 
 let mockCategories: Category[] = [
   {
@@ -181,97 +172,36 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
+          {/* income */}
+          <TouchableOpacity
+            className="w-[80%] h-12 border-2 border-black rounded-2xl items-center justify-center mx-auto"
+            style={{ backgroundColor: theme.bgWhite(0.2) }}
+            onPress={() =>
+              currentAccount
+                ? navigation.navigate("Income", {
+                    account: currentAccount,
+                    categories: categories,
+                  })
+                : {}
+            }
+          >
+            <PlusIcon size={40} color={"black"} />
+          </TouchableOpacity>
           {/* chart */}
-          {/* TODO: remove temp items */}
           <View className="flex-1 pb-6">
-            <View className="rounded-full w-[200] h-[200] bg-purple-400 m-auto">
-              <View className="rounded-full w-[120] h-[120] bg-white m-auto"></View>
-            </View>
+            <Chart
+              categories={categories}
+              history={currentAccount.history}
+              type={CategoryTypes.expense}
+            />
           </View>
           {/* legend */}
-          {/* TODO: remove temp items */}
-          <View className="bg-purple-300 h-[20%] w-[80%] mx-auto rounded-2xl px-3 py-1">
-            <View className="flex-row">
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-            </View>
-            <View className="flex-row">
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-            </View>
-            <View className="flex-row">
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-            </View>
-            <View className="flex-row">
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-              <View className="flex-row pb-2">
-                <BookmarkIcon size={25} color={"black"} />
-                <Text className="my-auto pl-2 pr-2">Category</Text>
-              </View>
-            </View>
-          </View>
-          {/* control */}
-          <View className="flex-row justify-between w-[80%] py-6 flex-grow-0 mx-auto">
-            {/* expenses */}
-            <TouchableOpacity
-              className="w-24 h-24 border-4 border-red-600 rounded-2xl items-center justify-center"
-              style={{ backgroundColor: theme.bgWhite(0.5) }}
-            >
-              <MinusIcon size={60} color={"red"} />
-            </TouchableOpacity>
-            {/* income */}
-            <TouchableOpacity
-              className="w-24 h-24 border-4 border-green-600 rounded-2xl items-center justify-center"
-              style={{ backgroundColor: theme.bgWhite(0.5) }}
-              onPress={() =>
-                currentAccount
-                  ? navigation.navigate("Income", {
-                      account: currentAccount,
-                      categories: categories,
-                    })
-                  : {}
-              }
-            >
-              <PlusIcon size={60} color={"green"} />
-            </TouchableOpacity>
+          <View className="bg-purple-300 h-[30%] w-[80%] mx-auto rounded-2xl px-3 py-1 mb-6">
+            <Legend
+              categories={categories}
+              history={currentAccount.history}
+              type={CategoryTypes.expense}
+            />
           </View>
         </View>
       </SafeAreaView>
