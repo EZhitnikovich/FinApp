@@ -1,259 +1,225 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../navigation/Navigation";
-import { v4 as uuidv4 } from "uuid";
 
+import { Account, Category, CategoryTypes } from "../types/index";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  BookmarkSquareIcon,
-  CalendarIcon,
-  CreditCardIcon,
-  MagnifyingGlassIcon,
-  MagnifyingGlassPlusIcon,
+  AdjustmentsVerticalIcon,
+  ClipboardDocumentListIcon,
   PlusIcon,
 } from "react-native-heroicons/outline";
+import { StatusBar } from "expo-status-bar";
+import { theme } from "../theme";
+import { v4 as uuidv4 } from "uuid";
+import { Chart } from "../components/chart";
+import { Legend } from "../components/legend";
 
-import PieChart from "react-native-pie-chart";
-import { Account, Transaction } from "../types/index";
-import DefaultLayout from "./DefaultLayout";
-
-const moqAccounts: Account[] = [
+let mockCategories: Category[] = [
   {
-    balance: 105224,
-    name: "Account name1",
-    categories: [
-      {
-        id: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-        color: "#536f96",
-        name: "set",
-      },
-      {
-        id: "f89977c0-8334-4226-ab20-784840d42863",
-        color: "#00ff00",
-        name: "dfghdshfugisdhf",
-      },
-    ],
-    history: [
-      { amount: 50, date: "16-7-2023", id: uuidv4(), categoryId: "" },
-      {
-        amount: 65,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 100,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
-      },
-      {
-        amount: 7,
-        date: "17-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 66,
-        date: "17-7-2023",
-        id: uuidv4(),
-        categoryId: "d54189b3-e85b-4798-81cb-6c5a5b353f4a",
-      },
-      {
-        amount: 20,
-        date: "16-7-2023",
-        id: uuidv4(),
-        categoryId: "f89977c0-8334-4226-ab20-784840d42863",
-      },
-    ],
+    categoryType: CategoryTypes.expense,
+    color: "#ff0011",
+    id: uuidv4(),
+    name: "test1",
   },
   {
-    balance: 999999,
-    name: "Account name2",
-    history: [],
-    categories: [],
+    categoryType: CategoryTypes.income,
+    color: "#012011",
+    id: uuidv4(),
+    name: "test2",
+  },
+  {
+    categoryType: CategoryTypes.expense,
+    color: "#0f0f1f",
+    id: uuidv4(),
+    name: "test3",
+  },
+  {
+    categoryType: CategoryTypes.expense,
+    color: "#ffff00",
+    id: uuidv4(),
+    name: "test4",
+  },
+  {
+    categoryType: CategoryTypes.expense,
+    color: "#f0000f",
+    id: uuidv4(),
+    name: "test5",
+  },
+
+  {
+    categoryType: CategoryTypes.income,
+    color: "#ff0011",
+    id: uuidv4(),
+    name: "test6",
+  },
+  {
+    categoryType: CategoryTypes.expense,
+    color: "#012011",
+    id: uuidv4(),
+    name: "test7",
+  },
+  {
+    categoryType: CategoryTypes.income,
+    color: "#0f0f1f",
+    id: uuidv4(),
+    name: "test8",
+  },
+  {
+    categoryType: CategoryTypes.income,
+    color: "#ffff00",
+    id: uuidv4(),
+    name: "test9",
+  },
+  {
+    categoryType: CategoryTypes.income,
+    color: "#f0000f",
+    id: uuidv4(),
+    name: "test10",
   },
 ];
 
+let mockAccoutns: Account[] = [
+  { name: "testAccount", history: [] },
+  { name: "testAccount2", history: [] },
+];
+
 export default function HomeScreen() {
+  useIsFocused();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
-  const [accounts, setAccounts] = useState<Account[]>(moqAccounts);
-  const [currentAccount, selectAccount] = useState<Account | null>(accounts[0]);
+  const [accounts, setAccounts] = useState<Account[]>(mockAccoutns);
+  const [currentAccount, selectAccount] = useState<Account>(accounts[0]);
+  const [loading, setLoading] = useState(false);
 
-  const getSumWithCategories = (history: Transaction[]) => {
-    var result: {
-      key: string;
-      value: number;
-    }[] = [];
+  const [categories, setCategories] = useState<Category[]>(mockCategories);
 
-    for (let i = 0; i < history.length; i++) {
-      let val = result.find((x) => x.key === history[i].categoryId);
-      if (val) {
-        val.value += history[i].amount;
-      } else {
-        result.push({
-          key: history[i].categoryId,
-          value: history[i].amount,
-        });
-      }
-    }
-
-    return result;
-  };
+  // useEffect(() => {
+  //   setLoading(true);
+  //   const readData = async () => {
+  //     let data = await getData(storageKey);
+  //     if (data) {
+  //       setAccounts(JSON.parse(data) as Account[]);
+  //     }
+  //   };
+  //   readData().then(() => {
+  //     setLoading(false);
+  //   });
+  // }, []);
 
   return (
-    <DefaultLayout>
-      <View className="flex flex-col h-full pt-1">
-        {/* accounts */}
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 15 }}
-          className="border-b pb-2 flex-grow-0"
-        >
-          {/* account */}
-          {accounts.length > 0
-            ? accounts.map((account, index) => (
-                <View
-                  key={index}
-                  className="w-60 rounded-3xl p-3 space-y-1 border mr-5"
-                >
-                  <Text className="text-black text-2xl border-b-2 font-semibold">
-                    {account.name}
-                  </Text>
-                  {/* balance */}
-                  <View className="flex-row justify-between">
-                    <Text className="text-black text-base font-semibold">
-                      Balance:
-                    </Text>
-                    <View className="flex-row">
-                      <Text className="text-black text-base font-semibold pr-1">
-                        {`${account.balance}`.length > 13
-                          ? `${account.balance}`.slice(0, 11) + "..."
-                          : account.balance}
-                      </Text>
-                      <CreditCardIcon color="black" />
-                    </View>
-                  </View>
-                  {/* modification date */}
-                  <View className="flex-row justify-between">
-                    <Text className="text-black text-base font-semibold">
-                      Last:
-                    </Text>
-                    <View className="flex-row">
-                      <Text className="text-black text-base font-semibold pr-1">
-                        {account.history.find(
-                          (x) => x.id === uuidv4() // TODO: change to normal date selector
-                        )?.date ?? "No data"}
-                      </Text>
-                      <CalendarIcon color="black" />
-                    </View>
-                  </View>
-                  {/* View button */}
-                  <TouchableOpacity
-                    onPress={() => selectAccount(account)}
-                    className="flex-row rounded-full border p-2 justify-center"
-                  >
-                    <MagnifyingGlassIcon size={25} color="black" />
-                    <Text className="font-semibold text-base">View</Text>
-                  </TouchableOpacity>
-                </View>
-              ))
-            : null}
-          {/* add account */}
-          <View
-            className={
-              "flex border rounded-3xl justify-center" +
-              (accounts.length === 0 ? " h-40 relative w-96" : " w-60")
+    <View className="flex-1">
+      <StatusBar style="light" />
+      <Image
+        source={require("../assets/images/bg.png")}
+        className="absolute h-full w-full"
+      />
+      <SafeAreaView className="flex flex-1">
+        <View className="h-[10%] flex-row justify-between items-end pb-3 px-4">
+          <TouchableOpacity
+            className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700"
+            onPress={() =>
+              navigation.navigate("History", {
+                history: currentAccount.history,
+                categories: categories,
+              })
             }
           >
-            <TouchableOpacity
-              className="justify-center m-auto border-2 rounded-full"
-              onPress={() => navigation.navigate("AddCard")}
-            >
-              <PlusIcon size={75} color="black" />
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-        {/* body */}
-        {currentAccount ? (
-          <View className="mt-5 flex-grow">
-            <Text className="text-center font-bold text-3xl">
-              {currentAccount.name}
+            <ClipboardDocumentListIcon
+              className="m-auto"
+              size={53}
+              color={"white"}
+            />
+          </TouchableOpacity>
+          <View className="items-center">
+            <Text className="text-purple-100  text-xl">
+              {currentAccount?.name}
             </Text>
-            <View className="flex-row px-4 justify-between py-2">
-              <Text className="font-semibold text-2xl">Balance:</Text>
-              <Text className="font-semibold text-2xl">
-                {currentAccount.balance}
+          </View>
+          <TouchableOpacity
+            className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700"
+            onPress={() =>
+              navigation.navigate("Settings", { categories: categories })
+            }
+          >
+            <AdjustmentsVerticalIcon
+              className="m-auto"
+              size={53}
+              color={"white"}
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          className="flex-1"
+          style={{ backgroundColor: theme.bgWhite(0.9) }}
+        >
+          <Text className="text-purple-700 mx-auto mt-3">August 18, 2023</Text>
+          {/* balance */}
+          <View className="h-[15%] w-[80%] bg-purple-200 m-auto rounded-xl items-center my-3 px-3 pb-1">
+            <Text className="text-3xl m-auto border-b w-full text-center">
+              {currentAccount
+                ? currentAccount.history.reduce(
+                    (prev, curr) => prev + curr.amount,
+                    0
+                  )
+                : 0}
+            </Text>
+            <View className="flex-row justify-between w-full">
+              <Text className="text-green-700 text-base">Income:</Text>
+              <Text className="text-green-700 text-base">
+                {currentAccount
+                  ? currentAccount.history
+                      .filter((x) => x.amount > 0)
+                      .reduce((prev, curr) => prev + curr.amount, 0)
+                  : 0}
               </Text>
             </View>
-            <View className="flex-row px-4 justify-between py-2">
-              <Text className="font-semibold text-2xl">Last Update:</Text>
-              <Text className="font-semibold text-2xl">
-                {currentAccount.history.find(
-                  (x) => x.id === uuidv4() // TODO: change to normal date selector
-                )?.date ?? "No data"}
+            <View className="flex-row justify-between w-full">
+              <Text className="text-red-700 text-base">Expenses:</Text>
+              <Text className="text-red-700 text-base">
+                {currentAccount
+                  ? currentAccount.history
+                      .filter((x) => x.amount < 0)
+                      .reduce((prev, curr) => prev + curr.amount, 0)
+                  : 0}
               </Text>
             </View>
-            {/* chart */}
-            {currentAccount && currentAccount.history.length > 0 ? (
-              <View>
-                <View className="m-auto py-5">
-                  <PieChart
-                    widthAndHeight={200}
-                    series={getSumWithCategories(currentAccount.history).map(
-                      (x) => x.value
-                    )} // TODO: ref mb
-                    sliceColor={getSumWithCategories(
-                      currentAccount.history
-                    ).map(
-                      (x) =>
-                        currentAccount.categories.find((c) => c.id == x.key)
-                          ?.color ?? "#000000"
-                    )}
-                    coverRadius={0.6}
-                  />
-                </View>
-                {/* legend */}
-                {currentAccount.categories.length > 0 ? (
-                  <FlatList
-                    className="px-3 pb-4"
-                    numColumns={3}
-                    data={currentAccount.categories}
-                    keyExtractor={(_, index) => `${index}`}
-                    renderItem={({ item }) => (
-                      <View style={{ flex: 1 / 3 }} className="flex-row py-1">
-                        <BookmarkSquareIcon color={item.color} />
-                        <Text>{item.name}</Text>
-                      </View>
-                    )}
-                  />
-                ) : null}
-              </View>
-            ) : null}
           </View>
-        ) : null}
-        {/* footer */}
-        {currentAccount ? (
-          <View className="flex-grow-0 py-3">
-            <TouchableOpacity
-              className="flex-row border rounded-2xl w-1/2 justify-center p-3 m-auto"
-              onPress={() => navigation.navigate("MoreInfo")}
-            >
-              <MagnifyingGlassPlusIcon size={28} color="black" />
-              <Text className="font-semibold text-xl pl-2">More</Text>
-            </TouchableOpacity>
+          {/* income */}
+          <TouchableOpacity
+            className="w-[80%] h-12 border-2 border-black rounded-2xl items-center justify-center mx-auto"
+            style={{ backgroundColor: theme.bgWhite(0.2) }}
+            onPress={() =>
+              currentAccount
+                ? navigation.navigate("Operation", {
+                    account: currentAccount,
+                    categories: categories,
+                  })
+                : {}
+            }
+          >
+            <PlusIcon size={40} color={"black"} />
+          </TouchableOpacity>
+          {/* chart */}
+          <View className="flex-1 pb-6">
+            <Chart
+              categories={categories}
+              history={currentAccount.history}
+              type={CategoryTypes.expense}
+            />
           </View>
-        ) : null}
-      </View>
-    </DefaultLayout>
+          {/* legend */}
+          <View className="bg-purple-300 h-[30%] w-[80%] mx-auto rounded-2xl px-3 py-1 mb-6">
+            <Legend
+              categories={categories}
+              history={currentAccount.history}
+              type={CategoryTypes.expense}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
