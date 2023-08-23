@@ -138,7 +138,12 @@ export default function HomeScreen() {
               {currentAccount?.name}
             </Text>
           </View>
-          <TouchableOpacity className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700">
+          <TouchableOpacity
+            className="h-14 w-14 rounded-lg border border-purple-950 bg-purple-700"
+            onPress={() =>
+              navigation.navigate("Settings", { categories: categories })
+            }
+          >
             <AdjustmentsVerticalIcon
               className="m-auto"
               size={53}

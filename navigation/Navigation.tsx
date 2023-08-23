@@ -17,7 +17,9 @@ export type RootStackParams = {
     history: Transaction[];
     categories: Category[];
   };
-  Settings: undefined;
+  Settings: {
+    categories: Category[];
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParams>();
